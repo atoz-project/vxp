@@ -49,7 +49,8 @@ Exactly one accent hue. No purple, neon, gradient text, or colored glow.
 - **Mono:** SFMono-Regular, Menlo, Consolas for IDs, counts, `kbd`, field names,
   and metadata labels.
 - **Reading measure:** entry prose is capped at 64rem (1024px) on wide screens;
-  entry titles stay between 28px and 40px. Headings are weight-driven, not enormous.
+  entry titles stay between 28px and 40px, and the index title tops out at 52px.
+  Headings are weight-driven, not enormous.
 - **Scale:** 16px base, 1.8 line-height on body, 1.2 line-height on headings,
   letter-spacing no tighter than -0.04em.
 - **Numbers:** tabular numerals in tables and counts.
