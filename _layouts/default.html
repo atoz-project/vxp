@@ -33,8 +33,22 @@
   </header>
 
   <div class="site-frame">
-    <aside class="site-sidebar" aria-label="分类导航">
+    <aside class="site-sidebar" aria-label="搜索与分类导航">
       <div class="sidebar-inner">
+        {%- if page.url == '/' %}
+        <div class="catalog-tools" data-catalog-tools hidden>
+          <label class="visually-hidden" for="catalog-search">搜索条目</label>
+          <div class="search-box">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" stroke-width="1.6"/>
+              <path d="m12.6 12.6 4.1 4.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <input id="catalog-search" type="search" data-catalog-search placeholder="搜索编号或标题" autocomplete="off" spellcheck="false">
+            <kbd aria-hidden="true">/</kbd>
+          </div>
+          <p class="search-status" data-search-status role="status" aria-live="polite"></p>
+        </div>
+        {%- endif %}
         <p class="sidebar-note">按研究活动分类，不表示严重程度。</p>
         <nav class="category-nav" aria-label="失效模式分类">
           <a href="{{ '/' | relative_url }}#a-目标版本与攻击面"><span class="cat-letter">A</span><span class="cat-name">目标、版本与攻击面</span></a>

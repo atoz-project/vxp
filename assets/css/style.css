@@ -476,14 +476,9 @@ svg {
 }
 
 .catalog-tools {
-  position: sticky;
-  top: var(--header-height);
-  z-index: 20;
-  margin: clamp(2rem, 4vw, 3.25rem) 0 0;
-  padding: 0.9rem 0 0.75rem;
-  border-top: 1px solid var(--border);
+  margin: 0 0 1.25rem;
+  padding: 0 0 1.15rem;
   border-bottom: 1px solid var(--border);
-  background: var(--paper);
 }
 
 .search-box {
@@ -1013,7 +1008,16 @@ h3:hover .heading-anchor,
   }
 
   .catalog-tools {
-    top: var(--header-height);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .search-box {
+    min-height: 48px;
+  }
+
+  .search-box input {
+    height: 44px;
   }
 }
 
