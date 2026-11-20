@@ -48,7 +48,8 @@ Exactly one accent hue. No purple, neon, gradient text, or colored glow.
   consistently across macOS, Windows, and Linux.
 - **Mono:** SFMono-Regular, Menlo, Consolas for IDs, counts, `kbd`, field names,
   and metadata labels.
-- **Reading measure:** 65–75ch for prose. Headings are weight-driven, not enormous.
+- **Reading measure:** entry prose is capped at 48rem (768px), roughly 45–50 Han
+  characters per line. Headings are weight-driven, not enormous.
 - **Scale:** 16px base, 1.8 line-height on body, 1.2 line-height on headings,
   letter-spacing no tighter than -0.04em.
 - **Numbers:** tabular numerals in tables and counts.
@@ -73,9 +74,9 @@ Exactly one accent hue. No purple, neon, gradient text, or colored glow.
 
 ## 5. Layout Principles
 
-- Max width 1440px. Desktop grid: 248px index plus a flexible content column.
-- Home content can run wide; entry prose stays under 75ch with a 216px page
-  outline rail at large widths.
+- Max width 1520px. Desktop grid: 232px index plus a flexible content column.
+- Entry content is capped at 920px. The 200px page outline only appears at
+  1500px and above, so it never narrows the reading column on common laptops.
 - Mobile collapses to one column below 960px; tables recompose at 720px.
 - Touch targets are at least 44px. No horizontal page overflow.
 - Spacing uses a small fixed scale (4, 8, 12, 16, 24, 32, 48, 64, 96px).

@@ -14,7 +14,7 @@
   --accent-wash: #f1e0d8;
   --selection: #e8c5b8;
   --header-height: 72px;
-  --measure: 70ch;
+  --measure: 48rem;
   --radius: 10px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -204,7 +204,7 @@ svg {
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  width: min(100% - 3rem, 1440px);
+  width: min(100% - 3rem, 1520px);
   min-height: var(--header-height);
   margin: 0 auto;
 }
@@ -298,9 +298,9 @@ svg {
 
 .site-frame {
   display: grid;
-  grid-template-columns: 248px minmax(0, 1fr);
-  gap: clamp(2.5rem, 6vw, 6rem);
-  width: min(100% - 3rem, 1440px);
+  grid-template-columns: 232px minmax(0, 1fr);
+  gap: clamp(2.5rem, 4vw, 4rem);
+  width: min(100% - 3rem, 1520px);
   margin: 0 auto;
   padding: clamp(2.5rem, 5vw, 4.5rem) 0 clamp(4rem, 8vw, 7rem);
 }
@@ -420,10 +420,7 @@ svg {
 }
 
 .article-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 760px) minmax(170px, 216px);
-  gap: clamp(2.5rem, 5vw, 5rem);
-  align-items: start;
+  min-width: 0;
 }
 
 .catalog-layout {
@@ -654,7 +651,7 @@ svg {
 /* Entry pages */
 
 .entry {
-  max-width: 760px;
+  max-width: 920px;
   font-size: 1rem;
 }
 
@@ -846,6 +843,7 @@ h3:hover .heading-anchor,
 }
 
 .page-toc {
+  display: none;
   position: sticky;
   top: calc(var(--header-height) + 2rem);
   padding-top: 1.15rem;
@@ -900,7 +898,7 @@ h3:hover .heading-anchor,
   align-items: center;
   justify-content: space-between;
   gap: 1rem 2rem;
-  width: min(100% - 3rem, 1440px);
+  width: min(100% - 3rem, 1520px);
   margin: 0 auto;
   padding: 1.8rem 0 2.5rem;
   color: var(--muted);
@@ -937,13 +935,16 @@ h3:hover .heading-anchor,
 
 /* Responsive */
 
-@media (max-width: 1180px) {
+@media (min-width: 1500px) {
   .article-layout {
-    grid-template-columns: minmax(0, 760px);
+    display: grid;
+    grid-template-columns: minmax(0, 920px) minmax(170px, 200px);
+    gap: clamp(2.5rem, 4vw, 3.75rem);
+    align-items: start;
   }
 
   .page-toc {
-    display: none;
+    display: block;
   }
 }
 
@@ -955,7 +956,7 @@ h3:hover .heading-anchor,
   .header-inner,
   .site-frame,
   .footer-inner {
-    width: min(100% - 2rem, 1440px);
+    width: min(100% - 2rem, 1520px);
   }
 
   .site-frame {
@@ -1133,7 +1134,7 @@ h3:hover .heading-anchor,
   .header-inner,
   .site-frame,
   .footer-inner {
-    width: min(100% - 1.5rem, 1440px);
+    width: min(100% - 1.5rem, 1520px);
   }
 
   .site-sidebar {
