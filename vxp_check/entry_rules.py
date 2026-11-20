@@ -13,7 +13,7 @@ import re
 from datetime import date, datetime
 from pathlib import Path
 
-from entry_record import (
+from .entry_record import (
     DATE_PATTERN,
     ID_PATTERN,
     VERSION_PATTERN,

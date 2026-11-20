@@ -1,6 +1,6 @@
 # 条目模板
 
-每个 VXP 条目是仓库根目录下的一个 Markdown 文件。文件顶部的 front matter 是条目记录：编号、标题、分类、父条目、状态、版本与日期的唯一来源。本文件是条目契约；机器可读的字段表在 `_data/entry_record.yml`，`uv run bin/check-entries` 按它校验，站点按它渲染元数据条。新增字段时同时修改两处，测试会检查两者一致。
+每个 VXP 条目是 `entries/` 下的一个 Markdown 文件。文件顶部的 front matter 是条目记录：编号、标题、分类、父条目、状态、版本与日期的唯一来源。本文件是条目契约；机器可读的字段表在 `_data/entry_record.yml`，`uv run bin/check-entries` 按它校验，站点按它渲染元数据条。新增字段时同时修改两处，测试会检查两者一致。
 
 ## 条目记录
 

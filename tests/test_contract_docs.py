@@ -5,7 +5,7 @@ import yaml
 
 from support import REPO
 
-from entry_record import collect
+from vxp_check import collect
 
 
 class ContractDocTests(unittest.TestCase):

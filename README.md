@@ -6,7 +6,7 @@ VXP（Vulnerability Validation Guide）记录漏洞研究、验证和交付中�
 - 术语表：[GLOSSARY.md](GLOSSARY.md)
 - 条目契约：[TEMPLATE.md](TEMPLATE.md)
 - 字段表：`_data/entry_record.yml`（检查器与站点共用的唯一 schema）
-- 条目文件：`VXP-NNN-短标题.md`。文件顶部的 front matter 是条目记录，保存编号、标题、分类、父条目、状态、版本与日期。
+- 条目文件：`entries/VXP-NNN-短标题.md`。文件顶部的 front matter 是条目记录，保存编号、标题、分类、父条目、状态、版本与日期。
 
 ```sh
 uv run bin/check-entries

@@ -2,8 +2,8 @@ import unittest
 
 from support import BODY, entry, filename, repo
 
-from entry_record import collect
-from entry_rules import check
+from vxp_check import collect
+from vxp_check import check
 
 
 def findings_for(entries=None, **kwargs):

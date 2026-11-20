@@ -4,9 +4,9 @@ interface：
     catalog = collect(Path("/path/to/repo"))
     catalog.records   # 解析成功的条目
     catalog.schema    # _data/entry_record.yml 的字段表
-    catalog.findings  # 读取阶段的问题（schema、分类、front matter）
+    catalog.findings  # 读取阶段的问题（schema、分类、条目目录、front matter）
 
-规则不在这里：bin/entry_rules.py 消费 Catalog。
+规则不在这里：vxp_check.entry_rules 消费 Catalog。
 """
 
 from __future__ import annotations
@@ -19,6 +19,7 @@ import yaml
 
 SCHEMA_PATH = Path("_data/entry_record.yml")
 CATEGORIES_PATH = Path("_data/categories.yml")
+ENTRY_DIR = Path("entries")
 ENTRY_GLOB = "VXP-*.md"
 FRONT_MATTER = re.compile(r"\A---\n(.*?)\n---\n(.*)\Z", re.S)
 ID_PATTERN = re.compile(r"VXP-\d{3}(?:\.\d{3})?\Z")
@@ -119,9 +120,12 @@ def collect(root: Path) -> Catalog:
     findings: list[Finding] = []
     schema = load_schema(root, findings)
     categories = load_categories(root, findings)
+    entry_dir = root / ENTRY_DIR
+    if not entry_dir.is_dir():
+        add(root, findings, entry_dir, "entries", "条目目录不存在")
     records = [
         record
-        for path in sorted(root.glob(ENTRY_GLOB))
+        for path in sorted(entry_dir.glob(ENTRY_GLOB))
         if (record := parse_record(root, path, findings)) is not None
     ]
     return Catalog(root, schema, tuple(categories), tuple(records), tuple(findings))

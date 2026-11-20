@@ -17,8 +17,15 @@ plugins:
 relative_links:
   enabled: true
   collections: true
+defaults:
+  - scope:
+      path: "entries"
+    values:
+      layout: default
+      permalink: /:basename:output_ext
 exclude:
   - .stitch
   - README.md
   - bin
   - tests
+  - vxp_check

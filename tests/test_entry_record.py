@@ -2,7 +2,7 @@ import unittest
 
 from support import entry, filename, repo
 
-from entry_record import collect
+from vxp_check import collect
 
 
 class CollectTests(unittest.TestCase):
@@ -36,6 +36,15 @@ class CollectTests(unittest.TestCase):
         with repo({filename(): "# 没有 front matter\n"}) as root:
             catalog = collect(root)
         self.assertIn("front-matter", [finding.rule for finding in catalog.findings])
+        self.assertEqual(catalog.records, ())
+
+    def test_missing_entry_dir_reports_finding(self):
+        with repo() as root:
+            for path in (root / "entries").iterdir():
+                path.unlink()
+            (root / "entries").rmdir()
+            catalog = collect(root)
+        self.assertEqual([finding.rule for finding in catalog.findings], ["entries"])
         self.assertEqual(catalog.records, ())
 
     def test_child_record_is_derived_from_id(self):

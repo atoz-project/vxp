@@ -3,12 +3,9 @@
 # requires-python = ">=3.10"
 # dependencies = ["pyyaml>=6"]
 # ///
-"""条目记录检查器：调用 entry_record.collect 与 entry_rules.check。
+"""条目记录检查器入口：把仓库根目录放上 sys.path，调用 vxp_check.cli.main。
 
-接口：
-    catalog = collect(Path("/path/to/repo"))
-    findings = check(catalog)
-    not findings  # => 所有条目满足约定
+uv 运行脚本时把 bin/ 放进 sys.path，而 vxp_check 包在仓库根目录；这一行是唯一的路径声明。
 
 CLI：
     uv run bin/check-entries [--root DIR]
@@ -18,33 +15,12 @@ CLI：
 
 from __future__ import annotations
 
-import argparse
 import sys
 from pathlib import Path
 
-from entry_record import collect
-from entry_rules import check
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="check-entries", description="检查 VXP 条目记录")
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parent.parent, help="仓库根目录")
-    args = parser.parse_args(argv)
-
-    catalog = collect(args.root)
-    findings = sorted(
-        [*catalog.findings, *check(catalog)],
-        key=lambda finding: (finding.path, finding.rule, finding.message),
-    )
-    if not findings:
-        print(f"检查 {len(catalog.records)} 个条目：0 条问题")
-        return 0
-
-    for finding in findings:
-        print(f"✗ {finding}")
-    print(f"检查 {len(catalog.records)} 个条目：{len(findings)} 条问题")
-    return 1
-
+from vxp_check.cli import main  # noqa: E402
 
 if __name__ == "__main__":
     sys.exit(main())

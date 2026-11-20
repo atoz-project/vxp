@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-import sys
 from contextlib import contextmanager
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
 REPO = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(REPO / "bin"))
 
 DATA = REPO / "_data"
 
@@ -100,6 +98,8 @@ def repo(
                 categories if categories is not None else (DATA / "categories.yml").read_text(encoding="utf-8"),
                 encoding="utf-8",
             )
+        entry_dir = root / "entries"
+        entry_dir.mkdir()
         for name, text in (entries or {filename(): entry()}).items():
-            (root / name).write_text(text, encoding="utf-8")
+            (entry_dir / name).write_text(text, encoding="utf-8")
         yield root
