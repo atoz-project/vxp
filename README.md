@@ -1,13 +1,13 @@
 ---
 layout: default
-title: 漏洞验证失效模式 Wiki
-description: VXP（Vulnerability Validation Failure Modes）记录漏洞研究、验证和交付中常见的证据误判。
+title: 漏洞验证指南 Wiki
+description: VXP（Vulnerability Validation Guide）记录漏洞研究、验证和交付中常见的证据误判。
 permalink: /
 ---
 
-# VXP：漏洞验证失效模式 Wiki
+# VXP：漏洞验证指南 Wiki
 
-VXP（Vulnerability Validation Failure Modes）记录漏洞研究、验证和交付中常见的证据误判。分类用于导航，条目用于判断；它不是漏洞类型目录，也不替代具体项目的技术验收。
+VXP（Vulnerability Validation Guide）记录漏洞研究、验证和交付中常见的证据误判。分类用于导航，条目用于判断；它不是漏洞类型目录，也不替代具体项目的技术验收。
 
 <p class="catalog-summary"><span>79 个条目</span><span>49 个主条目 / 30 个子条目</span><span>6 个分类</span></p>
 
