@@ -4,7 +4,6 @@ lang: zh-CN
 url: "https://atoz-project.github.io"
 baseurl: "/vxp"
 repository: atoz-project/vxp
-theme: jekyll-theme-minimal
 markdown: kramdown
 kramdown:
   input: GFM
@@ -19,4 +18,5 @@ plugins:
 relative_links:
   enabled: true
   collections: true
-show_downloads: false
+exclude:
+  - .stitch

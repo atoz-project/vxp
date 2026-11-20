@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="{{ site.lang | default: 'zh-CN' }}" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f1e8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#131510" media="(prefers-color-scheme: dark)">
+  {% seo %}
+  <link rel="icon" href="{{ '/assets/favicon.svg' | relative_url }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <script>document.documentElement.classList.replace('no-js', 'js');</script>
+</head>
+<body class="{% if page.url == '/' %}page-home{% else %}page-doc{% endif %}">
+  <a class="skip-link" href="#main">跳到正文</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="{{ '/' | relative_url }}" aria-label="VXP 首页">
+        <span class="brand-mark" aria-hidden="true">V</span>
+        <span class="brand-text">
+          <strong>VXP</strong>
+          <span>漏洞利用失效模式</span>
+        </span>
+      </a>
+
+      <nav class="top-nav" aria-label="主导航">
+        <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>索引</a>
+        <a href="{{ '/GLOSSARY.html' | relative_url }}"{% if page.url == '/GLOSSARY.html' %} aria-current="page"{% endif %}>术语表</a>
+        <a href="{{ '/TEMPLATE.html' | relative_url }}"{% if page.url == '/TEMPLATE.html' %} aria-current="page"{% endif %}>模板</a>
+        <a class="github-link" href="https://github.com/{{ site.repository }}" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="site-frame">
+    <aside class="site-sidebar" aria-label="分类导航">
+      <div class="sidebar-inner">
+        <p class="sidebar-note">按研究活动分类，不表示严重程度。</p>
+        <nav class="category-nav" aria-label="失效模式分类">
+          <a href="{{ '/' | relative_url }}#a-目标版本与攻击面"><span class="cat-letter">A</span><span class="cat-name">目标、版本与攻击面</span></a>
+          <a href="{{ '/' | relative_url }}#b-缺陷信号与利用原语"><span class="cat-letter">B</span><span class="cat-name">缺陷信号与利用原语</span></a>
+          <a href="{{ '/' | relative_url }}#c-最终效果与影响结论"><span class="cat-letter">C</span><span class="cat-name">最终效果与影响结论</span></a>
+          <a href="{{ '/' | relative_url }}#d-成功率时间与资源测量"><span class="cat-letter">D</span><span class="cat-name">成功率、时间与资源测量</span></a>
+          <a href="{{ '/' | relative_url }}#e-研究形态与交付约定"><span class="cat-letter">E</span><span class="cat-name">研究形态与交付约定</span></a>
+          <a href="{{ '/' | relative_url }}#f-复现证据技术结论与执行安全"><span class="cat-letter">F</span><span class="cat-name">复现证据、技术结论与执行安全</span></a>
+        </nav>
+        <div class="sidebar-links">
+          <a href="{{ '/GLOSSARY.html' | relative_url }}">术语表</a>
+          <a href="{{ '/TEMPLATE.html' | relative_url }}">条目模板</a>
+          <a href="https://github.com/{{ site.repository }}" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
+        </div>
+      </div>
+    </aside>
+
+    <main id="main" class="site-main">
+      {% unless page.url == '/' %}
+      <nav class="breadcrumb" aria-label="面包屑">
+        <a href="{{ '/' | relative_url }}">条目索引</a>
+        <span aria-hidden="true">/</span>
+        <span>{{ page.title | default: '文档' }}</span>
+      </nav>
+      {% endunless %}
+
+      <div class="{% if page.url == '/' %}catalog-layout{% else %}article-layout{% endif %}">
+        <article class="prose {% if page.url == '/' %}catalog{% else %}entry{% endif %}" data-page-content>
+          {{ content }}
+        </article>
+
+        {% unless page.url == '/' %}
+        <aside class="page-toc" data-page-toc aria-label="本页目录" hidden></aside>
+        {% endunless %}
+      </div>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p><strong>VXP</strong><span>Vulnerability Exploitation Failure Modes</span></p>
+      <p>
+        <a href="https://github.com/{{ site.repository }}" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <span aria-hidden="true">/</span>
+        <a href="https://github.com/{{ site.repository }}/edit/main/{{ page.path }}" target="_blank" rel="noopener noreferrer">编辑本页</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="{{ '/assets/js/site.js' | relative_url }}" defer></script>
+</body>
+</html>

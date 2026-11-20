@@ -1,6 +1,28 @@
+---
+layout: default
+title: 漏洞利用失效模式 Wiki
+description: VXP（Vulnerability Exploitation Failure Modes）记录漏洞研究、验证和交付中常见的证据误判。
+permalink: /
+---
+
 # VXP：漏洞利用失效模式 Wiki
 
 VXP（Vulnerability Exploitation Failure Modes）记录漏洞研究、验证和交付中常见的证据误判。分类用于导航，条目用于判断；它不是漏洞类型目录，也不替代具体项目的技术验收。
+
+<p class="catalog-summary"><span>79 个条目</span><span>49 个主条目 / 30 个子条目</span><span>6 个分类</span></p>
+
+<div class="catalog-tools" data-catalog-tools hidden>
+  <label class="visually-hidden" for="catalog-search">搜索条目</label>
+  <div class="search-box">
+    <svg class="search-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" stroke-width="1.6"/>
+      <path d="m12.6 12.6 4.1 4.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <input id="catalog-search" type="search" data-catalog-search placeholder="搜索编号、标题或关键词" autocomplete="off" spellcheck="false">
+    <kbd aria-hidden="true">/</kbd>
+  </div>
+  <p class="search-status" data-search-status role="status" aria-live="polite">共 79 个条目</p>
+</div>
 
 ## 结构与使用原则
 
