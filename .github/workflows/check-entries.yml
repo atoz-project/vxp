@@ -16,3 +16,4 @@ jobs:
         with:
           enable-cache: true
       - run: uv run bin/check-entries
+      - run: uv run --with pyyaml python -m unittest discover -s tests

@@ -3,11 +3,12 @@
 # requires-python = ">=3.10"
 # dependencies = ["pyyaml>=6"]
 # ///
-"""条目记录检查器：front matter、编号、父子关系、分类与正文结构。
+"""条目记录检查器：调用 entry_record.collect 与 entry_rules.check。
 
 接口：
-    findings = Checker(Path("/path/to/repo")).call()
-    not findings  # => 79 个条目全部满足约定
+    catalog = collect(Path("/path/to/repo"))
+    findings = check(catalog)
+    not findings  # => 所有条目满足约定
 
 CLI：
     uv run bin/check-entries [--root DIR]
@@ -18,269 +19,11 @@ CLI：
 from __future__ import annotations
 
 import argparse
-import re
 import sys
-from dataclasses import dataclass
-from datetime import date, datetime
 from pathlib import Path
 
-import yaml
-
-REQUIRED_FIELDS = ("vxp_id", "title", "category", "status", "version", "created", "updated")
-SECTIONS = ("定义", "示例", "识别方法", "预防与验收要求", "验收证据与量化字段", "边界与关联", "参考来源")
-OLD_METADATA = ("分类", "层级", "状态", "条目版本", "创建日期", "修改日期")
-ID_PATTERN = re.compile(r"VXP-\d{3}(?:\.\d{3})?\Z")
-VERSION_PATTERN = re.compile(r"\d+\.\d+\.\d+\Z")
-DATE_PATTERN = re.compile(r"\d{4}-\d{2}-\d{2}\Z")
-FRONT_MATTER = re.compile(r"\A---\n(.*?)\n---\n(.*)\Z", re.S)
-HEADING = re.compile(r"## (.+)\Z")
-
-
-@dataclass(frozen=True)
-class Finding:
-    path: str
-    rule: str
-    message: str
-
-    def __str__(self) -> str:
-        return f"{self.path} [{self.rule}] {self.message}"
-
-
-@dataclass
-class Record:
-    path: Path
-    id: str
-    fields: dict
-    body: str
-
-
-class Checker:
-    def __init__(self, root: Path):
-        self.root = root.resolve()
-        self.findings: list[Finding] = []
-        self.records: list[Record] = []
-        self.category_letters: list[str] = []
-        self.entries_count = 0
-
-    def call(self) -> list[Finding]:
-        self.load_categories()
-        self.load_entries()
-        self.check_parents()
-        self.check_uniqueness()
-        return sorted(self.findings, key=lambda f: (f.path, f.rule, f.message))
-
-    def add(self, path: Path | str, rule: str, message: str) -> None:
-        self.findings.append(Finding(self.relative(path), rule, message))
-
-    def relative(self, path: Path | str) -> str:
-        return str(path).replace(f"{self.root}/", "")
-
-    def load_yaml(self, text: str, path: Path) -> dict:
-        try:
-            data = yaml.safe_load(text)
-        except yaml.YAMLError as error:
-            self.add(path, "front-matter", f"YAML 解析失败：{error}")
-            return {}
-        return data if isinstance(data, dict) else {}
-
-    def load_categories(self) -> None:
-        path = self.root / "_data/categories.yml"
-        if not path.is_file():
-            self.add(path, "categories", "分类数据文件不存在")
-            return
-        try:
-            data = yaml.safe_load(path.read_text(encoding="utf-8"))
-        except yaml.YAMLError as error:
-            self.add(path, "categories", f"YAML 解析失败：{error}")
-            return
-        if not isinstance(data, list):
-            self.add(path, "categories", "顶层必须是数组")
-            return
-
-        seen_letters: set[str] = set()
-        seen_slugs: set[str] = set()
-        for index, item in enumerate(data, start=1):
-            if not isinstance(item, dict):
-                self.add(path, "categories", f"第 {index} 项必须是映射")
-                continue
-            letter = str(item.get("letter", "")).strip()
-            name = str(item.get("name", "")).strip()
-            slug = str(item.get("slug", "")).strip()
-            if not (letter and name and slug):
-                self.add(path, "categories", f"第 {index} 项缺少 letter/name/slug")
-            if not re.fullmatch(r"[A-Z]", letter):
-                self.add(path, "categories", f"letter {letter!r} 不是单个大写字母")
-            if letter in seen_letters:
-                self.add(path, "categories", f"letter {letter} 重复")
-            if slug in seen_slugs:
-                self.add(path, "categories", f"slug {slug} 重复")
-            seen_letters.add(letter)
-            seen_slugs.add(slug)
-            if letter:
-                self.category_letters.append(letter)
-
-    def load_entries(self) -> None:
-        paths = sorted(self.root.glob("VXP-*.md"))
-        self.entries_count = len(paths)
-        for path in paths:
-            parsed = self.parse(path)
-            if parsed is None:
-                continue
-            fields, body = parsed
-            record = Record(path, str(fields.get("vxp_id", "")).strip(), fields, body)
-            self.records.append(record)
-            self.check_fields(record)
-            self.check_body(record)
-
-    def parse(self, path: Path) -> tuple[dict, str] | None:
-        text = path.read_text(encoding="utf-8")
-        match = FRONT_MATTER.match(text)
-        if not match:
-            self.add(path, "front-matter", "缺少 front matter（文件必须以 --- 开头）")
-            return None
-        data = yaml.safe_load(match.group(1))
-        if not isinstance(data, dict):
-            self.add(path, "front-matter", "front matter 必须是映射")
-            return None
-        return data, match.group(2)
-
-    def check_fields(self, record: Record) -> None:
-        path = record.path
-        fields = record.fields
-
-        for key in REQUIRED_FIELDS:
-            value = fields.get(key)
-            if value is None or not str(value).strip():
-                self.add(path, f"field:{key}", "缺少必填字段")
-
-        filename_id = re.match(r"VXP-\d{3}(?:\.\d{3})?", path.name)
-        if filename_id is None:
-            self.add(path, "filename", "文件名必须以 VXP-NNN 或 VXP-NNN.MMM 开头")
-        elif record.id != filename_id.group(0):
-            self.add(path, "field:vxp_id", f"vxp_id {record.id!r} 与文件名 {filename_id.group(0)} 不一致")
-        if not ID_PATTERN.fullmatch(record.id):
-            self.add(path, "field:vxp_id", "编号格式应为 VXP-NNN 或 VXP-NNN.MMM")
-
-        category = str(fields.get("category", ""))
-        if category not in self.category_letters:
-            allowed = ", ".join(self.category_letters)
-            self.add(path, "field:category", f"分类 {category!r} 不在 {allowed} 中")
-
-        title = str(fields.get("title", ""))
-        if re.match(r"VXP-\d", title):
-            self.add(path, "field:title", "标题不应重复编号")
-        if "\n" in title:
-            self.add(path, "field:title", "标题不应包含换行")
-
-        version = str(fields.get("version", ""))
-        if not VERSION_PATTERN.fullmatch(version):
-            self.add(path, "field:version", "版本格式应为 MAJOR.MINOR.PATCH")
-
-        created = self.check_date(path, "created", fields.get("created"))
-        updated = self.check_date(path, "updated", fields.get("updated"))
-        if created and updated and updated < created:
-            self.add(path, "field:updated", "修改日期早于创建日期")
-
-    def check_date(self, path: Path, key: str, value) -> date | None:
-        if value is None:
-            return None
-        if isinstance(value, datetime):
-            return value.date()
-        if isinstance(value, date):
-            return value
-        if isinstance(value, str):
-            if not DATE_PATTERN.fullmatch(value):
-                self.add(path, f"field:{key}", "日期格式应为 YYYY-MM-DD")
-                return None
-            try:
-                return date.fromisoformat(value)
-            except ValueError:
-                self.add(path, f"field:{key}", f"日期 {value!r} 无法解析")
-                return None
-        self.add(path, f"field:{key}", "日期必须是 YYYY-MM-DD")
-        return None
-
-    def check_body(self, record: Record) -> None:
-        path = record.path
-        body = record.body
-
-        if not body.lstrip().startswith("## 定义"):
-            self.add(path, "body:start", "正文必须从「## 定义」开始")
-
-        found: list[str] = []
-        for line in self.outside_fences(body):
-            if line.startswith("# "):
-                self.add(path, "body:h1", "正文不应包含 H1；标题由条目记录生成")
-            if any(line.startswith(f"- {key}：") for key in OLD_METADATA):
-                self.add(path, "body:metadata", "元数据已移入 front matter，正文不应重复")
-            heading = HEADING.fullmatch(line)
-            if heading:
-                found.append(heading.group(1))
-
-        missing = [section for section in SECTIONS if section not in found]
-        extra = [section for section in found if section not in SECTIONS]
-        if missing or extra:
-            parts = []
-            if missing:
-                parts.append(f"缺少 {'、'.join(missing)}")
-            if extra:
-                parts.append(f"多出 {'、'.join(extra)}")
-            self.add(path, "body:sections", "；".join(parts))
-        elif found != list(SECTIONS):
-            self.add(path, "body:sections", f"章节顺序应为 {' / '.join(SECTIONS)}")
-
-    @staticmethod
-    def outside_fences(body: str):
-        in_fence = False
-        for line in body.splitlines():
-            if line.startswith("```") or line.startswith("~~~"):
-                in_fence = not in_fence
-                continue
-            if not in_fence:
-                yield line
-
-    def check_parents(self) -> None:
-        by_id = {record.id: record for record in self.records if record.id}
-
-        for record in self.records:
-            parent = str(record.fields.get("parent", "")).strip()
-            child = "." in record.id
-
-            if child:
-                if not parent:
-                    self.add(record.path, "parent:missing", "子条目必须填写 parent")
-                    continue
-                parent_record = by_id.get(parent)
-                if parent_record is None:
-                    self.add(record.path, "parent:unknown", f"父条目 {parent} 不存在")
-                    continue
-                if "." in parent:
-                    self.add(record.path, "parent:not-main", f"父条目 {parent} 自身是子条目")
-                expected = record.id.split(".")[0]
-                if parent != expected:
-                    self.add(record.path, "parent:mismatch", f"parent 应为 {expected}，实际为 {parent}")
-                if str(record.fields.get("category", "")) != str(parent_record.fields.get("category", "")):
-                    self.add(record.path, "parent:category", "子条目的分类必须与父条目一致")
-            elif parent:
-                self.add(record.path, "parent:unexpected", "主条目不应填写 parent")
-
-    def check_uniqueness(self) -> None:
-        ids: dict[str, Path] = {}
-        titles: dict[str, Path] = {}
-        for record in self.records:
-            if record.id:
-                if record.id in ids:
-                    self.add(record.path, "unique:id", f"编号 {record.id} 与 {self.relative(ids[record.id])} 重复")
-                else:
-                    ids[record.id] = record.path
-
-            title = str(record.fields.get("title", "")).strip()
-            if not title:
-                continue
-            if title in titles:
-                self.add(record.path, "unique:title", f"标题 {title!r} 与 {self.relative(titles[title])} 重复")
-            else:
-                titles[title] = record.path
+from entry_record import collect
+from entry_rules import check
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -288,15 +31,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parent.parent, help="仓库根目录")
     args = parser.parse_args(argv)
 
-    checker = Checker(args.root)
-    findings = checker.call()
+    catalog = collect(args.root)
+    findings = sorted(
+        [*catalog.findings, *check(catalog)],
+        key=lambda finding: (finding.path, finding.rule, finding.message),
+    )
     if not findings:
-        print(f"检查 {checker.entries_count} 个条目：0 条问题")
+        print(f"检查 {len(catalog.records)} 个条目：0 条问题")
         return 0
 
     for finding in findings:
         print(f"✗ {finding}")
-    print(f"检查 {checker.entries_count} 个条目：{len(findings)} 条问题")
+    print(f"检查 {len(catalog.records)} 个条目：{len(findings)} 条问题")
     return 1
 
 

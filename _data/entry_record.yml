@@ -1,0 +1,59 @@
+# 条目记录字段表：checker 与站点的唯一 schema 来源。
+# checker 读取 required/type，站点读取 label/render。
+# 新增字段时只改这里，并同步 TEMPLATE.md 的字段表（tests/test_contract_docs.py 会检查）。
+
+fields:
+  - key: vxp_id
+    label: 编号
+    type: id
+    required: true
+    render: title
+  - key: title
+    label: 标题
+    type: text
+    required: true
+    render: title
+  - key: category
+    label: 分类
+    type: category
+    required: true
+    render: meta
+  - key: parent
+    label: 父条目
+    type: entry_id
+    required: false
+    render: level
+  - key: status
+    label: 状态
+    type: text
+    required: true
+    render: meta
+  - key: version
+    label: 条目版本
+    type: version
+    required: true
+    render: meta
+  - key: created
+    label: 创建日期
+    type: date
+    required: true
+    render: meta
+  - key: updated
+    label: 修改日期
+    type: date
+    required: true
+    render: meta
+
+sections:
+  - 定义
+  - 示例
+  - 识别方法
+  - 预防与验收要求
+  - 验收证据与量化字段
+  - 边界与关联
+  - 参考来源
+
+level:
+  label: 层级
+  child: 子条目
+  main: 主条目

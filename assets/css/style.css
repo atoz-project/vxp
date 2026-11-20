@@ -437,6 +437,27 @@ svg {
 
 /* Home */
 
+@media (min-width: 961px) {
+  .page-home .header-inner,
+  .page-home .site-frame,
+  .page-home .footer-inner {
+    width: min(100% - 3rem, 1320px);
+  }
+
+  .page-home .site-frame {
+    grid-template-columns: clamp(248px, 22vw, 288px) minmax(0, 1fr);
+    gap: clamp(2rem, 3vw, 3rem);
+  }
+
+  .page-home .site-sidebar {
+    border-right: 1px solid var(--border);
+  }
+
+  .page-home .sidebar-inner {
+    padding-right: 1rem;
+  }
+}
+
 .catalog > h1 {
   max-width: 20ch;
   margin-bottom: 1.35rem;
@@ -457,11 +478,20 @@ svg {
   flex-wrap: wrap;
   gap: 0.4rem 1.25rem;
   margin: 1.75rem 0 0;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   color: var(--muted);
   font-family: var(--font-mono);
   font-size: 0.74rem;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.025em;
+}
+
+.catalog > .catalog-summary + h2 {
+  margin-top: 2.5rem;
+  padding-top: 0;
+  border-top: 0;
 }
 
 .catalog-summary span {
@@ -476,14 +506,9 @@ svg {
 }
 
 .catalog-tools {
-  position: sticky;
-  top: var(--header-height);
-  z-index: 20;
-  margin: clamp(2rem, 4vw, 3.25rem) 0 0;
-  padding: 0.9rem 0 0.75rem;
-  border-top: 1px solid var(--border);
+  margin: 0 0 1.25rem;
+  padding: 0 0 1.15rem;
   border-bottom: 1px solid var(--border);
-  background: var(--paper);
 }
 
 .search-box {
@@ -1013,7 +1038,16 @@ h3:hover .heading-anchor,
   }
 
   .catalog-tools {
-    top: var(--header-height);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .search-box {
+    min-height: 48px;
+  }
+
+  .search-box input {
+    height: 44px;
   }
 }
 
