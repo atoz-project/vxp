@@ -90,27 +90,6 @@
     updateStatus(total, "");
   }
 
-  function initEntryMetadata() {
-    const meta = document.querySelector(".entry > h1 + ul");
-    if (!meta) return;
-
-    meta.classList.add("entry-meta");
-
-    meta.querySelectorAll("li").forEach((item) => {
-      const raw = item.textContent.trim();
-      const separator = raw.indexOf("：");
-      if (separator < 1) return;
-
-      const label = document.createElement("span");
-      const value = document.createElement("span");
-      label.className = "meta-label";
-      value.className = "meta-value";
-      label.textContent = raw.slice(0, separator);
-      value.textContent = raw.slice(separator + 1);
-      item.replaceChildren(label, value);
-    });
-  }
-
   function initTableScrollers() {
     document.querySelectorAll(".entry table").forEach((table) => {
       if (table.parentElement?.classList.contains("table-scroll")) return;
@@ -189,7 +168,6 @@
 
   if (isHome) initSearch();
   if (isDoc) {
-    initEntryMetadata();
     initTableScrollers();
     initOutline();
   }

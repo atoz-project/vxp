@@ -1,0 +1,8 @@
+<ul class="entry-meta">
+  <li><span class="meta-label">分类</span><span class="meta-value">{{ page.category }}</span></li>
+  <li><span class="meta-label">层级</span><span class="meta-value">{% if page.parent %}子条目{% else %}主条目{% endif %}</span></li>
+  <li><span class="meta-label">状态</span><span class="meta-value">{{ page.status }}</span></li>
+  <li><span class="meta-label">条目版本</span><span class="meta-value">{{ page.version }}</span></li>
+  <li><span class="meta-label">创建日期</span><span class="meta-value">{{ page.created }}</span></li>
+  <li><span class="meta-label">修改日期</span><span class="meta-value">{{ page.updated }}</span></li>
+</ul>

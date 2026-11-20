@@ -1,11 +1,37 @@
-# VXP-NNN[.MMM]：短标题
+# 条目模板
 
-- 分类：A/B/C/D/E/F
-- 层级：主条目/子条目
-- 状态：草案
-- 条目版本：0.1.0
-- 创建日期：YYYY-MM-DD
-- 修改日期：YYYY-MM-DD
+每个 VXP 条目是仓库根目录下的一个 Markdown 文件。文件顶部的 front matter 是条目记录；标题、分类、层级和元数据条由站点在构建时从记录生成，正文不重复这些字段。
+
+## 条目记录
+
+把下面的 front matter 放在文件顶部。主条目没有 `parent`；子条目必须写父条目编号。
+
+```yaml
+---
+vxp_id: VXP-NNN
+title: '短标题'
+category: A
+parent: VXP-NNN
+status: 草案
+version: 0.1.0
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+---
+```
+
+- `vxp_id`：主条目为 `VXP-NNN`，子条目为 `VXP-NNN.MMM`；必须与文件名开头一致。
+- `title`：不含编号的短标题；站点渲染为 `VXP-NNN：短标题`。
+- `category`：A～F 之一。分类名称与顺序由 `_data/categories.yml` 定义。
+- `parent`：仅子条目必填，取值是父条目编号。
+- `status`：条目状态，当前公开草案统一为“草案”。
+- `version`：条目版本，格式见首页“条目元数据与版本”。
+- `created`、`updated`：日期，格式 `YYYY-MM-DD`。
+
+新增或修改条目后运行 `uv run bin/check-entries`；有问题时退出码为 1。
+
+## 章节骨架
+
+正文从「定义」开始，不写 H1，不重复条目记录中的字段。
 
 ## 定义
 

@@ -1,5 +1,5 @@
 title: VXP
-description: Vulnerability Exploitation Failure Modes — 漏洞利用失效模式 Wiki
+description: Vulnerability Validation Guide — 漏洞验证指南 Wiki
 lang: zh-CN
 url: "https://atoz-project.github.io"
 baseurl: "/vxp"
@@ -11,7 +11,6 @@ kramdown:
 plugins:
   - jekyll-relative-links
   - jekyll-seo-tag
-  - jekyll-readme-index
   - jekyll-optional-front-matter
   - jekyll-default-layout
   - jekyll-titles-from-headings
@@ -20,3 +19,5 @@ relative_links:
   collections: true
 exclude:
   - .stitch
+  - README.md
+  - bin
